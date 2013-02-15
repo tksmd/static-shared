@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+	<display-name>StaticShared</display-name>
+
+	<servlet>
+		<servlet-name>staticshared</servlet-name>
+		<servlet-class>staticshared.SharedServlet</servlet-class>
+		<init-param>
+			<param-name>base</param-name>
+			<param-value>scripts</param-value>
+		</init-param>
+		<init-param>
+			<param-name>js</param-name>
+			<param-value>text/javascript; charset=utf8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>css</param-name>
+			<param-value>text/css; charset=utf8</param-value>
+		</init-param>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>staticshared</servlet-name>
+		<url-pattern>/.shared.js/*</url-pattern>
+		<url-pattern>/.shared.css/*</url-pattern>
+	</servlet-mapping>
+
+	<!-- The Usual Welcome File List -->
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+
+
+</web-app>
