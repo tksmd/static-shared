@@ -20,13 +20,14 @@ repositories {
 
 dependencies {
     compile 'com.google.guava:guava:14.0-rc2'
-    providedCompile 'javax.servlet:servlet-api:2.5', 'javax.servlet:jsp-api:2.0'
+    compile 'taglibs:standard:1.1.2'    
+    providedCompile 'javax.servlet:servlet-api:2.5', 'javax.servlet:jsp-api:2.0', 'javax.servlet:jstl:1.2'
     testCompile 'junit:junit:4.11'
-    
- 	def tomcatVersion = '7.0.11'
+                   
+ 	def tomcatVersion = '7.0.35'
     tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}", "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}"
     tomcat("org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}") {
-        exclude group: 'org.eclipse.jdt.core.compiler', module: 'ecj'
+       exclude group: 'org.eclipse.jdt.core.compiler', module: 'ecj'
     }    
 }
 

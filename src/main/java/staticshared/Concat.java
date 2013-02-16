@@ -11,8 +11,15 @@ public class Concat {
 
 	private final File baseDir;
 
+	private final String baseDirPath;
+
 	public Concat(final File baseDir) {
+		if (baseDir == null || !baseDir.exists() || !baseDir.isDirectory()) {
+			throw new IllegalArgumentException(baseDir
+					+ " must exists or be a directory ( not file ).");
+		}
 		this.baseDir = baseDir;
+		this.baseDirPath = baseDir.getAbsolutePath();
 	}
 
 	public void execute(File out, String... resources) throws IOException {
@@ -23,8 +30,18 @@ public class Concat {
 			throws IOException {
 		for (String relative : resources) {
 			File from = new File(baseDir, relative).getCanonicalFile();
-			// TODO ここで、baseDir 以下にあるかをチェック
+
+			if (!contains(from)) {
+				// prevent directory traversal
+				// TODO log
+				continue;
+			}
 			Files.copy(from, os);
 		}
 	}
+
+	boolean contains(File target) {
+		return target.getAbsolutePath().startsWith(baseDirPath);
+	}
+
 }

@@ -19,6 +19,23 @@ public class ConcatTest {
 
 	private final Concat concat = new Concat(baseDir());
 
+	@Test(expected = IllegalArgumentException.class)
+	public void instance1() throws Exception {
+		new Concat(null);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void instance2() throws Exception {
+		File file = new File(baseDir(), "notexists");
+		new Concat(file);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void instance3() throws Exception {
+		File file = new File(baseDir(), "scripts/jquery-1.9.1.min.js");
+		new Concat(file);
+	}
+
 	/**
 	 * 単一ファイルの連結
 	 * 
@@ -42,6 +59,18 @@ public class ConcatTest {
 		concat.execute(out, "scripts/jquery-1.9.1.min.js",
 				"scripts/underscore-1.4.4.min.js");
 		assertThat(out, isSameAs("ConcatTest_execute2_expected.js"));
+	}
+
+	/**
+	 * ベースディレクトリ以上のファイルの取得の禁止
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void execute3() throws Exception {
+		File out = createTempfile();
+		concat.execute(out, "scripts/jquery-1.9.1.min.js", "../../build.gradle");
+		assertThat(out, isSameAs("scripts/jquery-1.9.1.min.js"));
 	}
 
 	static File createTempfile() throws IOException {

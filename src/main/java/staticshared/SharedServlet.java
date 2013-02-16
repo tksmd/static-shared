@@ -1,5 +1,9 @@
 package staticshared;
 
+import static staticshared.Utils.ext;
+import static staticshared.Utils.now;
+import static staticshared.Utils.sha1Hex;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
@@ -15,6 +19,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * 
+ * @author someda
+ * @see <a
+ *      href="https://github.com/cho45/Plack-Middleware-StaticShared/blob/master/lib/Plack/Middleware/StaticShared.pm">StaticShared.pm</a>
+ */
 public class SharedServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -312127685117751877L;
@@ -53,29 +63,40 @@ public class SharedServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		Pattern p = Pattern.compile(".?*/(.*)/([^:\\s]+):(.+)");
+		String context = req.getContextPath();
+		Pattern p = Pattern.compile(context + "/(.*?)/([^:\\s]+):(.+)");
 		Matcher m = p.matcher(req.getRequestURI());
-		if (m.matches()) {
-			String prefix = m.group(1);
-			// String version = m.group(2);
-			String files = m.group(3);
 
-			resp.setContentType(contentTypes.get(ext(prefix)));
-
-			ServletOutputStream os = resp.getOutputStream();
-			String[] resources = files.split(",");
-			concat.execute(os, resources);
-			os.flush();
-
-		} else {
+		if (!m.matches()) {
 			resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+			return;
 		}
 
-	}
+		String prefix = m.group(1); // .shared.js or .shared.css etc
+		String version = m.group(2); // v1.1 or R20130216
+		String files = m.group(3); // scripts/jquery-1.9.1.js,scripts/underscore.js
 
-	static String ext(String name) {
-		int idx = name.lastIndexOf('.');
-		return (idx == -1) ? "" : name.substring(idx + 1);
+		String etag = sha1Hex(version + ":" + files);
+		String current = req.getHeader("If-None-Match");
+
+		if (current != null && current.equals(etag)) {
+			resp.sendError(HttpServletResponse.SC_NOT_MODIFIED);
+			return;
+		}
+
+		resp.setContentType(contentTypes.get(ext(prefix)));
+		// cache is alive 10 years later.
+		long ttl = 315360000L;
+		resp.setHeader("Cache-Control",
+				String.format("public; max-age=%d; s-maxage=%d", ttl, ttl));
+		resp.setDateHeader("Expires", now() + ttl);
+		resp.setDateHeader("Last-Modified", 0L);
+		resp.setHeader("ETag", etag);
+
+		ServletOutputStream os = resp.getOutputStream();
+		String[] resources = files.split(",");
+		concat.execute(os, resources);
+		os.flush();
 	}
 
 }

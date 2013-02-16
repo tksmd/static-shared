@@ -10,7 +10,7 @@
 		<servlet-class>staticshared.SharedServlet</servlet-class>
 		<init-param>
 			<param-name>base</param-name>
-			<param-value>scripts</param-value>
+			<param-value></param-value>
 		</init-param>
 		<init-param>
 			<param-name>js</param-name>
@@ -28,11 +28,19 @@
 		<url-pattern>/.shared.css/*</url-pattern>
 	</servlet-mapping>
 
-	<!-- The Usual Welcome File List -->
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
-		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
 
+	<jsp-config>
+		<jsp-property-group>
+			<url-pattern>*.jsp</url-pattern>
+			<el-ignored>false</el-ignored>
+			<page-encoding>UTF-8</page-encoding>
+			<scripting-invalid>false</scripting-invalid>
+			<include-prelude>/WEB-INF/include.jsp</include-prelude>
+			<trim-directive-whitespaces>true</trim-directive-whitespaces>
+		</jsp-property-group>
+	</jsp-config>
 
 </web-app>
