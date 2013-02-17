@@ -2,7 +2,9 @@ package staticshared;
 
 import static org.junit.Assert.assertThat;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -12,29 +14,9 @@ import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
+public class CatFileTest {
 
-public class ConcatTest {
-
-	private final Concat concat = new Concat(baseDir());
-
-	@Test(expected = IllegalArgumentException.class)
-	public void instance1() throws Exception {
-		new Concat(null);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void instance2() throws Exception {
-		File file = new File(baseDir(), "notexists");
-		new Concat(file);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void instance3() throws Exception {
-		File file = new File(baseDir(), "scripts/jquery-1.9.1.min.js");
-		new Concat(file);
-	}
+	private final CatFile concat = new CatFile(baseDir());
 
 	/**
 	 * 単一ファイルの連結
@@ -80,7 +62,7 @@ public class ConcatTest {
 	}
 
 	static File baseDir() {
-		URL url = ConcatTest.class.getResource("");
+		URL url = CatFileTest.class.getResource("");
 		try {
 			return new File(url.toURI());
 		} catch (URISyntaxException e) {
@@ -88,11 +70,21 @@ public class ConcatTest {
 		}
 	}
 
-	static final Matcher<File> isSameAs(String path) {
-		return isSameAs(new File(baseDir(), path));
+	static String fileToString(File file) throws IOException {
+
+		StringBuilder buf = new StringBuilder();
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new FileReader(file));
+			buf.append(reader.readLine());
+			return buf.toString();
+		} finally {
+			Utils.closeQuietly(reader);
+		}
 	}
 
-	static final Matcher<File> isSameAs(final File expected) {
+	static final Matcher<File> isSameAs(String path) {
+		final File expected = new File(baseDir(), path);
 
 		return new TypeSafeMatcher<File>() {
 
@@ -102,8 +94,8 @@ public class ConcatTest {
 			protected boolean matchesSafely(File item) {
 				this.tested = item;
 				try {
-					String actual = Files.toString(item, Charsets.UTF_8);
-					String concat = Files.toString(expected, Charsets.UTF_8);
+					String actual = fileToString(item);
+					String concat = fileToString(expected);
 					return actual.equals(concat);
 				} catch (IOException e) {
 					return false;

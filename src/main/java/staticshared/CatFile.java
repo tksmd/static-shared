@@ -5,25 +5,25 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import com.google.common.io.Files;
-
-public class Concat {
+public class CatFile {
 
 	private final File baseDir;
 
 	private final String baseDirPath;
 
-	public Concat(final File baseDir) {
-		if (baseDir == null || !baseDir.exists() || !baseDir.isDirectory()) {
-			throw new IllegalArgumentException(baseDir
-					+ " must exists or be a directory ( not file ).");
-		}
+	public CatFile(final File baseDir) {
 		this.baseDir = baseDir;
 		this.baseDirPath = baseDir.getAbsolutePath();
 	}
 
 	public void execute(File out, String... resources) throws IOException {
-		execute(new FileOutputStream(out), resources);
+		FileOutputStream os = null;
+		try {
+			os = new FileOutputStream(out);
+			execute(new FileOutputStream(out), resources);
+		} finally {
+			Utils.closeQuietly(os);
+		}
 	}
 
 	public void execute(OutputStream os, String... resources)
@@ -36,7 +36,7 @@ public class Concat {
 				// TODO log
 				continue;
 			}
-			Files.copy(from, os);
+			Utils.copy(from, os);
 		}
 	}
 

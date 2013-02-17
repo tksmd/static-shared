@@ -6,9 +6,6 @@ import static staticshared.Utils.sha1Hex;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,40 +26,42 @@ public class SharedServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -312127685117751877L;
 
-	private Concat concat;
-
-	private Map<String, String> contentTypes;
+	private Configuration config;
 
 	@Override
-	public void init(ServletConfig config) throws ServletException {
-		super.init(config);
-		initConcat(config);
-		initContentTypes(config);
+	public void init(ServletConfig sc) throws ServletException {
+		super.init(sc);
+		this.config = new Configuration();
+
+		this.config.setBaseDir(getBaseDir(sc));
+		String js = sc.getInitParameter("js");
+		if (js != null) {
+			this.config.addContentType("js", js);
+		}
+		String css = sc.getInitParameter("css");
+		if (css != null) {
+			this.config.addContentType("css", css);
+		}
+
+		String error = this.config.validate();
+		if (error != null) {
+			throw new ServletException(error);
+		}
 	}
 
-	void initConcat(ServletConfig config) {
-		String base = config.getInitParameter("base");
+	File getBaseDir(ServletConfig sc) {
+		String base = sc.getInitParameter("base");
 		File baseDir = new File(base);
 		if (!baseDir.exists()) {
-			String realPath = config.getServletContext().getRealPath(base);
+			String realPath = sc.getServletContext().getRealPath(base);
 			baseDir = new File(realPath);
 		}
-		concat = new Concat(baseDir);
-	}
-
-	void initContentTypes(ServletConfig config) {
-		Map<String, String> m = new HashMap<String, String>();
-		String js = config.getInitParameter("js");
-		m.put("js", (js != null) ? js : "text/javascript");
-		String css = config.getInitParameter("css");
-		m.put("css", (css != null) ? css : "text/css");
-		contentTypes = Collections.unmodifiableMap(m);
+		return baseDir;
 	}
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-
 		String context = req.getContextPath();
 		Pattern p = Pattern.compile(context + "/(.*?)/([^:\\s]+):(.+)");
 		Matcher m = p.matcher(req.getRequestURI());
@@ -84,7 +83,9 @@ public class SharedServlet extends HttpServlet {
 			return;
 		}
 
-		resp.setContentType(contentTypes.get(ext(prefix)));
+		CatFile concat = new CatFile(config.getBaseDir());
+
+		resp.setContentType(config.getContentType(ext(prefix)));
 		// cache is alive 10 years later.
 		long ttl = 315360000L;
 		resp.setHeader("Cache-Control",
