@@ -8,16 +8,16 @@ import org.junit.Test;
 public class UtilsTest {
 
 	@Test
-	public void ext1() {
-		assertThat(Utils.ext(".share.js"), is("js"));
-		assertThat(Utils.ext(".share.css"), is("css"));
-		assertThat(Utils.ext("share"), is(""));
-		assertThat(Utils.ext(""), is(""));
+	public void getExtention1() {
+		assertThat(Utils.getExtention(".share.js"), is("js"));
+		assertThat(Utils.getExtention(".share.css"), is("css"));
+		assertThat(Utils.getExtention("share"), is(""));
+		assertThat(Utils.getExtention(""), is(""));
 	}
 
 	@Test(expected = NullPointerException.class)
-	public void ext2() {
-		assertThat(Utils.ext(null), is("js"));
+	public void getExtention2() {
+		assertThat(Utils.getExtention(null), is("js"));
 	}
 
 }

@@ -15,10 +15,12 @@ class Utils {
 
 	private static final int BUF_SIZE = 0x1000; // 4K
 
+	private static final int TEMP_DIR_ATTEMPTS = 10000;
+
 	private static final char[] DIGITS = { '0', '1', '2', '3', '4', '5', '6',
 			'7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 
-	static TimeProvider PROVIDER = new TimeProvider();
+	static ClockWrapper CLOCK = new ClockWrapper();
 
 	static final String sha1Hex(String str) {
 		try {
@@ -29,13 +31,13 @@ class Utils {
 		}
 	}
 
-	static final String ext(String name) {
+	static final String getExtention(String name) {
 		int idx = name.lastIndexOf('.');
 		return (idx == -1) ? "" : name.substring(idx + 1);
 	}
 
 	static final long now() {
-		return PROVIDER.now();
+		return CLOCK.now();
 	}
 
 	/**
@@ -84,7 +86,21 @@ class Utils {
 		}
 	}
 
-	protected static class TimeProvider {
+	static File createTempDir() {
+		File baseDir = new File(System.getProperty("java.io.tmpdir"));
+		String baseName = CLOCK.now() + "-";
+		for (int counter = 0; counter < TEMP_DIR_ATTEMPTS; counter++) {
+			File tempDir = new File(baseDir, baseName + counter);
+			if (tempDir.mkdir()) {
+				return tempDir;
+			}
+		}
+		throw new IllegalStateException("Failed to create directory within "
+				+ TEMP_DIR_ATTEMPTS + " attempts (tried " + baseName + "0 to "
+				+ baseName + (TEMP_DIR_ATTEMPTS - 1) + ')');
+	}
+
+	protected static class ClockWrapper {
 		long now() {
 			return System.currentTimeMillis();
 		}

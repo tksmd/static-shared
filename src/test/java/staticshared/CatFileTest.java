@@ -1,13 +1,10 @@
 package staticshared;
 
 import static org.junit.Assert.assertThat;
+import static staticshared.Tests.baseDir;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -16,7 +13,7 @@ import org.junit.Test;
 
 public class CatFileTest {
 
-	private final CatFile concat = new CatFile(baseDir());
+	private final CatFile catfile = new CatFile(baseDir());
 
 	/**
 	 * 単一ファイルの連結
@@ -26,7 +23,7 @@ public class CatFileTest {
 	@Test
 	public void execute1() throws Exception {
 		File out = createTempfile();
-		concat.execute(out, "scripts/jquery-1.9.1.min.js");
+		catfile.execute(out, "scripts/jquery-1.9.1.min.js");
 		assertThat(out, isSameAs("scripts/jquery-1.9.1.min.js"));
 	}
 
@@ -38,9 +35,9 @@ public class CatFileTest {
 	@Test
 	public void execute2() throws Exception {
 		File out = createTempfile();
-		concat.execute(out, "scripts/jquery-1.9.1.min.js",
+		catfile.execute(out, "scripts/jquery-1.9.1.min.js",
 				"scripts/underscore-1.4.4.min.js");
-		assertThat(out, isSameAs("ConcatTest_execute2_expected.js"));
+		assertThat(out, isSameAs("CatfileTest_execute2_expected.js"));
 	}
 
 	/**
@@ -51,7 +48,7 @@ public class CatFileTest {
 	@Test
 	public void execute3() throws Exception {
 		File out = createTempfile();
-		concat.execute(out, "scripts/jquery-1.9.1.min.js", "../../build.gradle");
+		catfile.execute(out, "scripts/jquery-1.9.1.min.js", "../../build.gradle");
 		assertThat(out, isSameAs("scripts/jquery-1.9.1.min.js"));
 	}
 
@@ -59,28 +56,6 @@ public class CatFileTest {
 		File ret = File.createTempFile("ConcatTest-", ".js");
 		ret.deleteOnExit();
 		return ret;
-	}
-
-	static File baseDir() {
-		URL url = CatFileTest.class.getResource("");
-		try {
-			return new File(url.toURI());
-		} catch (URISyntaxException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	static String fileToString(File file) throws IOException {
-
-		StringBuilder buf = new StringBuilder();
-		BufferedReader reader = null;
-		try {
-			reader = new BufferedReader(new FileReader(file));
-			buf.append(reader.readLine());
-			return buf.toString();
-		} finally {
-			Utils.closeQuietly(reader);
-		}
 	}
 
 	static final Matcher<File> isSameAs(String path) {
@@ -94,8 +69,8 @@ public class CatFileTest {
 			protected boolean matchesSafely(File item) {
 				this.tested = item;
 				try {
-					String actual = fileToString(item);
-					String concat = fileToString(expected);
+					String actual = Tests.toString(item);
+					String concat = Tests.toString(expected);
 					return actual.equals(concat);
 				} catch (IOException e) {
 					return false;

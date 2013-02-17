@@ -20,7 +20,7 @@ repositories {
 
 dependencies {
     providedCompile 'javax.servlet:servlet-api:2.5', 'javax.servlet:jsp-api:2.0', 'javax.servlet:jstl:1.2'
-    testCompile 'junit:junit:4.11'
+    testCompile 'junit:junit:4.11', 'org.easymock:easymock:3.1'
                    
  	def tomcatVersion = '7.0.35'
     tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}", "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}", 'taglibs:standard:1.1.2'
