@@ -20,6 +20,10 @@
 			<param-name>css</param-name>
 			<param-value>text/css; charset=utf8</param-value>
 		</init-param>
+		<init-param>
+			<param-name>nocache-version</param-name>
+			<param-value>SNAPSHOT</param-value>
+		</init-param>		
 	</servlet>
 
 	<servlet-mapping>

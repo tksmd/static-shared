@@ -10,6 +10,8 @@ class Configuration {
 
 	private Map<String, String> contentTypes;
 
+	private String nocacheVersion = "SNAPSHOT";
+
 	Configuration() {
 		this.contentTypes = new HashMap<String, String>();
 		this.contentTypes.put("js", "text/javascript");
@@ -32,6 +34,18 @@ class Configuration {
 		return this.contentTypes.get(ext);
 	}
 
+	void setNocacheVersion(String nocacheVersion) {
+		this.nocacheVersion = nocacheVersion;
+	}
+
+	String getNocacheVersion() {
+		return nocacheVersion;
+	}
+
+	boolean isNocache(String version) {
+		return nocacheVersion.equalsIgnoreCase(version);
+	}
+
 	String validate() {
 		if (baseDir == null) {
 			return "basedir must not be null.";
@@ -43,6 +57,15 @@ class Configuration {
 			return baseDir + " must be a directory.";
 		}
 		return null;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder buf = new StringBuilder();
+		buf.append("baseDir = ").append(baseDir);
+		buf.append("contentTypes =").append(contentTypes);
+		buf.append("nocacheVersion =").append(nocacheVersion);
+		return buf.toString();
 	}
 
 }

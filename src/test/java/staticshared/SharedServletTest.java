@@ -134,6 +134,25 @@ public class SharedServletTest {
 		assertThat(os.getString(), is(Tests.toString(content)));
 	}
 
+	@Test
+	public void nocacheVersion1() throws Exception {
+		expectRequest(contextPath
+				+ "/.shared.js/SNAPSHOT:scripts/jquery-1.9.1.min.js,scripts/underscore-1.4.4.min.js");
+
+		response.setContentType("text/javascript");
+		expectLastCall();
+
+		MockServletOutputStream os = new MockServletOutputStream();
+		expect(response.getOutputStream()).andReturn(os);
+
+		replay(request, response);
+
+		File expected = new File(baseDir(), "SharedServletTest_cachefound.js");
+		servlet.doGet(request, response);
+
+		assertThat(os.getString(), is(Tests.toString(expected)));
+	}
+
 	void expectRequest(String requestURI) {
 		expect(request.getContextPath()).andReturn(contextPath);
 		expect(request.getRequestURI()).andReturn(requestURI);

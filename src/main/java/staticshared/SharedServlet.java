@@ -52,6 +52,11 @@ public class SharedServlet extends HttpServlet {
 			this.config.addContentType("css", css);
 		}
 
+		String nocacheVersion = sc.getInitParameter("nocache-version");
+		if (nocacheVersion != null) {
+			this.config.setNocacheVersion(nocacheVersion);
+		}
+
 		String error = this.config.validate();
 		if (error != null) {
 			throw new ServletException(error);
@@ -84,29 +89,42 @@ public class SharedServlet extends HttpServlet {
 		String version = m.group(2); // v1.1 or R20130216 and so on
 		String files = m.group(3); // scripts/jquery-1.9.1.js,scripts/underscore.js
 
-		String etag = sha1Hex(version + ":" + files);
-		String current = req.getHeader("If-None-Match");
+		if (config.isNocache(version)) {
+			// for development mode
 
-		if (current != null && current.equals(etag)) {
-			resp.sendError(HttpServletResponse.SC_NOT_MODIFIED);
-			return;
+			resp.setContentType(config.getContentType(getExtention(prefix)));
+			ServletOutputStream os = resp.getOutputStream();
+			CatFile catfile = new CatFile(config.getBaseDir());
+			catfile.execute(os, files.split(","));
+			os.flush();
+
+		} else {
+
+			String etag = sha1Hex(version + ":" + files);
+			String current = req.getHeader("If-None-Match");
+
+			if (current != null && current.equals(etag)) {
+				resp.sendError(HttpServletResponse.SC_NOT_MODIFIED);
+				return;
+			}
+
+			File content = getContent(etag, files.split(","));
+			long ttl = 315360000L;
+
+			resp.setContentType(config.getContentType(getExtention(prefix)));
+			resp.setContentLength((int) content.length());
+			// cache will be alive until 10 years later.
+			resp.setHeader("Cache-Control",
+					String.format("public; max-age=%d; s-maxage=%d", ttl, ttl));
+			resp.setDateHeader("Expires", now() + ttl);
+			resp.setDateHeader("Last-Modified", 0L);
+			resp.setHeader("ETag", etag);
+
+			ServletOutputStream os = resp.getOutputStream();
+			copy(content, os);
+			os.flush();
 		}
 
-		File content = getContent(etag, files.split(","));
-		long ttl = 315360000L;
-		
-		resp.setContentType(config.getContentType(getExtention(prefix)));
-		resp.setContentLength((int) content.length());
-		// cache will be alive until 10 years later.
-		resp.setHeader("Cache-Control",
-				String.format("public; max-age=%d; s-maxage=%d", ttl, ttl));
-		resp.setDateHeader("Expires", now() + ttl);
-		resp.setDateHeader("Last-Modified", 0L);
-		resp.setHeader("ETag", etag);
-
-		ServletOutputStream os = resp.getOutputStream();
-		copy(content, os);
-		os.flush();
 	}
 
 	protected File getContent(String etag, String[] resources)
