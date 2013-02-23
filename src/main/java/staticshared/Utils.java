@@ -9,8 +9,6 @@ import java.io.OutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import com.sun.istack.internal.Nullable;
-
 class Utils {
 
 	private static final int BUF_SIZE = 0x1000; // 4K
@@ -76,7 +74,7 @@ class Utils {
 		}
 	}
 
-	static void closeQuietly(@Nullable Closeable closeable) {
+	static void closeQuietly(Closeable closeable) {
 		try {
 			if (closeable == null) {
 				return;
