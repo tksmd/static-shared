@@ -1,7 +1,7 @@
 # What's this
 
-This is a Java Servlet implementation of [Plack::Middleware::StaticShared](https://github.com/cho45/Plack-Middleware-StaticShared), except the Google Closure compiling feature on javascript files concatination.
-In addition, Plack::Middleware::StaticShared uses memcached for results caching on the other hand this uses a simple file as cache.
+This is a Java Servlet implementation of [Plack::Middleware::StaticShared](https://metacpan.org/module/Plack::Middleware::StaticShared), except the Google Closure compiling feature on javascript files concatination.
+In addition, Plack::Middleware::StaticShared uses memcached for results caching on the other hand this uses a simple file as cache. So it is strongly recommended to be used with reverse proxy which can cache response of this servelet.
 
 # How To Use
 
@@ -26,8 +26,8 @@ In addition, Plack::Middleware::StaticShared uses memcached for results caching 
 			<param-value>text/css; charset=utf8</param-value>
 		</init-param>
 		<init-param>
-			<param-name>nocache-version</param-name>
-			<param-value>SNAPSHOT</param-value>
+			<param-name>nocache</param-name>
+			<param-value>true</param-value>
 		</init-param>
 	</servlet>
 
@@ -40,7 +40,7 @@ In addition, Plack::Middleware::StaticShared uses memcached for results caching 
 
 ## Load scripts/css through SharedServlet on your HTML
 
-If you want to load these 3 javascript files ( relative to context path )
+If you want to load these 3 javascript files ( relative to context path ) with version "v1",
 
 * js/jquery.js
 * js/underscore.js
@@ -54,9 +54,7 @@ then you add a script tag into your jsp file just like this.
 
 # Sample
 
-You can easily know how this Servlet works by following steps.
-
-At first, check out codes and run Tomcat by [gradle](http://http://www.gradle.org/) wrapper command.
+You can easily know how this works by following steps.
 
 ```
 git clone https://github.com/tksmd/static-shared
@@ -68,4 +66,4 @@ and then access to the URL ( http://localhost:8080/static-shared ) on your brows
 
 # See Also
 
-* [Plack::Middleware::StaticShared](https://github.com/cho45/Plack-Middleware-StaticShared)
+* [Plack::Middleware::StaticShared source](https://github.com/cho45/Plack-Middleware-StaticShared)

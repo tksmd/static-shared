@@ -88,6 +88,6 @@
 	</div>
 	<!-- /container -->
 	<script
-		src="${contextPath}/.shared.js/SNAPSHOT:js/jquery-1.9.1.min.js,js/underscore-1.4.4.min.js,js/bootstrap.min.js"></script>
+		src="${contextPath}/.shared.js/v1:js/jquery-1.9.1.min.js,js/underscore-1.4.4.min.js,js/bootstrap.min.js"></script>
 </body>
 </html>

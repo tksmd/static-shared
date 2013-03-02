@@ -52,9 +52,9 @@ public class SharedServlet extends HttpServlet {
 			this.config.addContentType("css", css);
 		}
 
-		String nocacheVersion = sc.getInitParameter("nocache-version");
-		if (nocacheVersion != null) {
-			this.config.setNocacheVersion(nocacheVersion);
+		String nocache = sc.getInitParameter("nocache");
+		if (nocache != null) {
+			this.config.setNocache(Boolean.valueOf(nocache));
 		}
 
 		String error = this.config.validate();
@@ -89,7 +89,7 @@ public class SharedServlet extends HttpServlet {
 		String version = m.group(2); // v1.1 or R20130216 and so on
 		String files = m.group(3); // scripts/jquery-1.9.1.js,scripts/underscore.js
 
-		if (config.isNocache(version)) {
+		if (config.isNocache()) {
 			// for development mode
 
 			resp.setContentType(config.getContentType(getExtention(prefix)));

@@ -21,8 +21,8 @@
 			<param-value>text/css; charset=utf8</param-value>
 		</init-param>
 		<init-param>
-			<param-name>nocache-version</param-name>
-			<param-value>SNAPSHOT</param-value>
+			<param-name>nocache</param-name>
+			<param-value>true</param-value>
 		</init-param>		
 	</servlet>
 

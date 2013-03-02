@@ -136,8 +136,11 @@ public class SharedServletTest {
 
 	@Test
 	public void nocacheVersion1() throws Exception {
+		
+		config.setNocache(true);
+		
 		expectRequest(contextPath
-				+ "/.shared.js/SNAPSHOT:scripts/jquery-1.9.1.min.js,scripts/underscore-1.4.4.min.js");
+				+ "/.shared.js/v1:scripts/jquery-1.9.1.min.js,scripts/underscore-1.4.4.min.js");
 
 		response.setContentType("text/javascript");
 		expectLastCall();

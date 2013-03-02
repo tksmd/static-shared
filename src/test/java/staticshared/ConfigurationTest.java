@@ -45,17 +45,13 @@ public class ConfigurationTest {
 
 	@Test
 	public void nocache1() throws Exception {
-		assertThat(config.isNocache("v1"), is(false));
-		assertThat(config.isNocache("SNAPSHOT"), is(true));
-		assertThat(config.isNocache("snapshot"), is(true));		
-		assertThat(config.isNocache("Snapshot"), is(true));		
+		assertThat(config.isNocache(), is(false));
 		
-		config.setNocacheVersion("DEVELOPMENT");
-		assertThat(config.isNocache("v1"), is(false));
-		assertThat(config.isNocache("SNAPSHOT"), is(false));
-		assertThat(config.isNocache("snapshot"), is(false));		
-		assertThat(config.isNocache("Snapshot"), is(false));
-		assertThat(config.isNocache("DEVELOPMENT"), is(true));		
+		config.setNocache(true);
+		assertThat(config.isNocache(), is(true));				
+
+		config.setNocache(false);
+		assertThat(config.isNocache(), is(false));		
 	}
 
 }

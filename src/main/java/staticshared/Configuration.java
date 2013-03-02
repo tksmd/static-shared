@@ -9,8 +9,8 @@ class Configuration {
 	private File baseDir;
 
 	private Map<String, String> contentTypes;
-
-	private String nocacheVersion = "SNAPSHOT";
+	
+	private boolean nocache = false;
 
 	Configuration() {
 		this.contentTypes = new HashMap<String, String>();
@@ -34,16 +34,13 @@ class Configuration {
 		return this.contentTypes.get(ext);
 	}
 
-	void setNocacheVersion(String nocacheVersion) {
-		this.nocacheVersion = nocacheVersion;
+	void setNocache(boolean nocache) {
+		this.nocache = nocache;
 	}
 
-	String getNocacheVersion() {
-		return nocacheVersion;
-	}
 
-	boolean isNocache(String version) {
-		return nocacheVersion.equalsIgnoreCase(version);
+	boolean isNocache() {
+		return nocache;
 	}
 
 	String validate() {
@@ -64,7 +61,7 @@ class Configuration {
 		StringBuilder buf = new StringBuilder();
 		buf.append("baseDir = ").append(baseDir);
 		buf.append("contentTypes =").append(contentTypes);
-		buf.append("nocacheVersion =").append(nocacheVersion);
+		buf.append("nocache =").append(nocache);
 		return buf.toString();
 	}
 
