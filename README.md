@@ -38,6 +38,8 @@ In addition, Plack::Middleware::StaticShared uses memcached for results caching 
 	</servlet-mapping>
 ```
 
+You can configure "base" parameter as a relative path from web application context or as a absolute path on the local filesystem. 
+
 ## Load scripts/css through SharedServlet on your HTML
 
 If you want to load these 3 javascript files ( relative to context path ) with version "v1",
@@ -51,6 +53,17 @@ then you add a script tag into your jsp file just like this.
 ```
 <script src="${pageContext.request.contextPath}/.shared.js/v1:js/jquery.js,js/underscore.js,js/bootstrap.js"></script>
 ```
+
+## Working with Amazon CloudFront dynamic content delivery
+
+[Amazon CloudFront](http://aws.amazon.com/cloudfront/) is Contents Delivery Network and supports [dynamic content delivery](http://aws.amazon.com/cloudfront/dynamic-content/).
+With this dynamic content delivery support, you can distribute static resources concatinated by this Servlet through your CloudFront endpoint. Roughly saying, you can use CloudFront as a cache of this Servlet.
+
+You need create CloudFront distribution first and then add custom origin (named 'staticshared' example below) on this servlet running. To make available dynamic content delivery, create cache behavior setting just like this.  
+
+![Cache Behavior Setting](https://cacoo.com/diagrams/EUPfqi2nKFyNCt3m-32E04.png) 
+
+For more details, please check [here](http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/WorkingWithDownloadDistributions.html#DownloadDistValuesPathPattern).
 
 # Sample
 
