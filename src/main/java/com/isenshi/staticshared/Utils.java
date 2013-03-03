@@ -1,4 +1,4 @@
-package staticshared;
+package com.isenshi.staticshared;
 
 import java.io.Closeable;
 import java.io.File;

@@ -1,7 +1,7 @@
-package staticshared;
+package com.isenshi.staticshared;
 
+import static com.isenshi.staticshared.Tests.baseDir;
 import static org.junit.Assert.assertThat;
-import static staticshared.Tests.baseDir;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,6 +10,8 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
+
+import com.isenshi.staticshared.CatFile;
 
 public class CatFileTest {
 

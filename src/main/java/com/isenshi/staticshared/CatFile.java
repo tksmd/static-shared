@@ -1,4 +1,4 @@
-package staticshared;
+package com.isenshi.staticshared;
 
 import java.io.File;
 import java.io.FileOutputStream;

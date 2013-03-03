@@ -1,10 +1,10 @@
-package staticshared;
+package com.isenshi.staticshared;
 
-import static staticshared.Utils.copy;
-import static staticshared.Utils.createTempDir;
-import static staticshared.Utils.getExtention;
-import static staticshared.Utils.now;
-import static staticshared.Utils.sha1Hex;
+import static com.isenshi.staticshared.Utils.copy;
+import static com.isenshi.staticshared.Utils.createTempDir;
+import static com.isenshi.staticshared.Utils.getExtention;
+import static com.isenshi.staticshared.Utils.now;
+import static com.isenshi.staticshared.Utils.sha1Hex;
 
 import java.io.File;
 import java.io.IOException;

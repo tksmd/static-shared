@@ -12,7 +12,7 @@ In addition, Plack::Middleware::StaticShared uses memcached for results caching 
 ```
 	<servlet>
 		<servlet-name>staticshared</servlet-name>
-		<servlet-class>staticshared.SharedServlet</servlet-class>
+		<servlet-class>com.isenshi.staticshared.SharedServlet</servlet-class>
 		<init-param>
 			<param-name>base</param-name>
 			<param-value></param-value>

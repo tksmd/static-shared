@@ -1,13 +1,15 @@
-package staticshared;
+package com.isenshi.staticshared;
 
+import static com.isenshi.staticshared.Tests.baseDir;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static staticshared.Tests.baseDir;
 
 import java.io.File;
 
 import org.junit.Test;
+
+import com.isenshi.staticshared.Configuration;
 
 public class ConfigurationTest {
 

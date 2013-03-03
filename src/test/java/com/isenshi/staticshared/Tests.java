@@ -1,4 +1,4 @@
-package staticshared;
+package com.isenshi.staticshared;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,6 +8,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.junit.Ignore;
+
+import com.isenshi.staticshared.Utils;
 
 @Ignore
 public class Tests {

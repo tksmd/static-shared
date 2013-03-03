@@ -1,5 +1,6 @@
-package staticshared;
+package com.isenshi.staticshared;
 
+import static com.isenshi.staticshared.Tests.baseDir;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
@@ -8,7 +9,6 @@ import static org.easymock.EasyMock.verify;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertFalse;
-import static staticshared.Tests.baseDir;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -22,6 +22,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.isenshi.staticshared.Configuration;
+import com.isenshi.staticshared.SharedServlet;
+import com.isenshi.staticshared.Utils;
 
 public class SharedServletTest {
 

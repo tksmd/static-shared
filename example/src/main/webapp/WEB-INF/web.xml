@@ -7,7 +7,7 @@
 
 	<servlet>
 		<servlet-name>staticshared</servlet-name>
-		<servlet-class>staticshared.SharedServlet</servlet-class>
+		<servlet-class>com.isenshi.staticshared.SharedServlet</servlet-class>
 		<init-param>
 			<param-name>base</param-name>
 			<param-value></param-value>
