@@ -15,7 +15,16 @@ apply plugin: 'maven'
 // for maven artifacts
 jar.baseName = 'staticshared'
 
+configurations {
+    provided
+}
+
 sourceSets {
+    // for provided ( http://blog.codeaholics.org/2012/emulating-mavens-provided-scope-in-gradle/ )
+    main.compileClasspath += configurations.provided
+    test.compileClasspath += configurations.provided
+    test.runtimeClasspath += configurations.provided
+        
     // for CI to pass
     test.output.resourcesDir = test.output.classesDir
 }
@@ -25,16 +34,21 @@ repositories {
 }
 
 dependencies {
+    provided 'javax.servlet:servlet-api:2.5'
     testCompile 'junit:junit:4.11', 'org.easymock:easymock:3.1'
-    compile 'javax.servlet:servlet-api:2.5'
 }
 
+eclipse.classpath.plusConfigurations += configurations.provided
 eclipse {
     pathVariables 'GRADLE_USER_HOME': gradle.gradleUserHomeDir
 }
 
 task wrapper(type: Wrapper){
     gradleVersion = '1.4'
+}
+
+task mappings {
+    conf2ScopeMappings.addMapping(0, configurations.provided, conf2ScopeMappings.PROVIDED)  
 }
 
 install {
