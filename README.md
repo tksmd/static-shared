@@ -62,7 +62,7 @@ cd static-shared
 ./gradlew -info tomcatRun
 ```
 
-and then access to the URL ( http://localhost:8080/static-shared ) on your browser.
+and then access to the URL ( http://localhost:8080/example ) on your browser.
 
 # See Also
 
