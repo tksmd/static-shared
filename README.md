@@ -5,9 +5,27 @@ In addition, Plack::Middleware::StaticShared uses memcached for results caching 
 
 # How To Use
 
-## Add dependency to staticshared for your project
+## Add dependency your project
 
-## Change web.xml and add servlet configuration.
+If you use [maven](http://maven.apache.org/), add the following dependency to your pom.xml.
+
+```
+    <dependency>
+        <groupId>com.isenshi</groupId>
+        <artifactId>staticshared</artifactId>
+        <version>1.0</version>
+    </dependency>
+```
+
+Or for [gradle](http://www.gradle.org) user, write your build.gradle just like this. 
+
+```
+repositories { mavenCentral() }
+
+dependencies { compile 'com.isenshi:staticshared:1.0' }
+```
+
+## Update web.xml
 
 ```
 	<servlet>

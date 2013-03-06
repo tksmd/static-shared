@@ -1,12 +1,10 @@
 allprojects {
-    apply plugin: 'java'
-    version = '1.0-SNAPSHOT'
-    group = 'com.isenshi'
-    sourceCompatibility = 1.6
+	apply plugin: 'java'
+	version = '1.0'
+	group = 'com.isenshi'
+	sourceCompatibility = 1.6
 
-    repositories {
-        mavenCentral()
-    }
+	repositories { mavenCentral() }
 }
 
 apply plugin: 'eclipse'
@@ -16,90 +14,90 @@ apply plugin: 'signing'
 // for maven artifacts
 jar.baseName = 'staticshared'
 
-configurations {
-    provided
-}
+configurations { provided }
 
 sourceSets {
-    // for provided ( http://blog.codeaholics.org/2012/emulating-mavens-provided-scope-in-gradle/ )
-    main.compileClasspath += configurations.provided
-    test.compileClasspath += configurations.provided
-    test.runtimeClasspath += configurations.provided
-        
-    // for CI to pass
-    test.output.resourcesDir = test.output.classesDir
+	// for provided ( http://blog.codeaholics.org/2012/emulating-mavens-provided-scope-in-gradle/ )
+	main.compileClasspath += configurations.provided
+	test.compileClasspath += configurations.provided
+	test.runtimeClasspath += configurations.provided
+
+	// for CI to pass
+	test.output.resourcesDir = test.output.classesDir
 }
 
-repositories {
-    mavenCentral()
-}
+repositories { mavenCentral() }
 
 dependencies {
-    provided 'javax.servlet:servlet-api:2.5'
-    testCompile 'junit:junit:4.11', 'org.easymock:easymock:3.1'
+	provided 'javax.servlet:servlet-api:2.5'
+	testCompile 'junit:junit:4.11', 'org.easymock:easymock:3.1'
 }
 
 eclipse.classpath.plusConfigurations += configurations.provided
-eclipse {
-    pathVariables 'GRADLE_USER_HOME': gradle.gradleUserHomeDir
-}
+eclipse { pathVariables 'GRADLE_USER_HOME': gradle.gradleUserHomeDir }
 
-task wrapper(type: Wrapper){
-    gradleVersion = '1.4'
-}
+task wrapper(type: Wrapper){ gradleVersion = '1.4' }
 
 task mappings {
-    conf2ScopeMappings.addMapping(0, configurations.provided, conf2ScopeMappings.PROVIDED)  
+	conf2ScopeMappings.addMapping(0, configurations.provided, conf2ScopeMappings.PROVIDED)
 }
 
-task sourcesJar(type: Jar, dependsOn:classes) { 
-     classifier = 'sources' 
-     from sourceSets.main.allSource 
-} 
+task sourcesJar(type: Jar, dependsOn:classes) {
+	classifier = 'sources'
+	from sourceSets.main.allSource
+}
 
-task javadocJar(type: Jar, dependsOn:javadoc) { 
-     classifier = 'javadoc' 
-     from javadoc.destinationDir 
-} 
+task javadocJar(type: Jar, dependsOn:javadoc) {
+	classifier = 'javadoc'
+	from javadoc.destinationDir
+}
 
 install {
-    repositories.mavenInstaller {
-        pom.project {
-            name 'staticshared'
-            url 'https://github.com/tksmd/static-shared'
-            description 'Servlet concatinating static resources'
-            licenses {
-                license {
-                    name 'The Apache Software License, Version 2.0'
-                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    distribution 'repo'
-                }
-            }
-            scm {
-                url 'https://github.com/tksmd/static-shared'
-                connection 'scm:git:https://github.com/tksmd/static-shared.git'
-                developerConnection 'scm:git:https://github.com/tksmd/static-shared.git'
-            }
-            developers {
-                developer {
-                    id 'tksmd'
-                    name 'SOMEDA Takashi'
-                    email 'someda@isenshi.com'
-                    roles {
-                        role 'developer'
-                    }
-                    timezone '+9'
-                } 
-            }
-        }
-    }
+	repositories.mavenInstaller { setupPom(pom) }
 }
 
-artifacts { 
-     archives sourcesJar 
-     archives javadocJar 
-} 
-
-signing {
-    sign configurations.archives
+artifacts {
+	archives sourcesJar
+	archives javadocJar
 }
+
+signing { sign configurations.archives }
+
+uploadArchives {
+	repositories {
+		mavenDeployer {
+			beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+			repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+				authentication(userName: sonatypeUsername, password: sonatypePassword)
+			}
+			setupPom(pom)
+		}
+	}
+}
+
+def setupPom(pom) {
+	pom.project {
+		name 'staticshared'
+		url 'https://github.com/tksmd/static-shared'
+		description 'Servlet concatinating static resources'
+		licenses {
+			license {
+				name 'The Apache Software License, Version 2.0'
+				url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+				distribution 'repo'
+			}
+		}
+		scm {
+			url 'https://github.com/tksmd/static-shared'
+			connection 'scm:git:https://github.com/tksmd/static-shared.git'
+			developerConnection 'scm:git:https://github.com/tksmd/static-shared.git'
+		}
+		developers {
+			developer {
+				id 'tksmd'
+				name 'SOMEDA Takashi'
+			}
+		}
+	}
+}
+
