@@ -4,4 +4,4 @@ jdk:
   - oraclejdk7
   - openjdk6
 install: "./gradlew --stacktrace -PsonatypeUsername=dummy -PsonatypePassword=dummy -x signArchives assemble"
-script: "./gradlew check"
+script: "./gradlew -PsonatypeUsername=dummy -PsonatypePassword=dummy check"
