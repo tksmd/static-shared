@@ -3,5 +3,5 @@ jdk:
   - openjdk7
   - oraclejdk7
   - openjdk6
-install: "./gradlew --stacktrace assemble"
+install: "./gradlew --stacktrace -x uploadArchive -x signArchives assemble"
 script: "./gradlew check"
